@@ -17,13 +17,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 public class handleSearch extends AppCompatActivity {
     Button btSearch;
     EditText editSearch;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_handle_search);
         btSearch = findViewById(R.id.search_btn);
@@ -37,37 +37,18 @@ public class handleSearch extends AppCompatActivity {
                 String searchedRecipe = editSearch.getText().toString().trim();
                 if (!TextUtils.isEmpty(searchedRecipe))
                 {
-                    DatabaseReference recRef = FirebaseDatabase.getInstance().getReference().child("recipes");
-                    recRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot)
-                        {
-                            for (DataSnapshot userSnapshot : snapshot.getChildren())
-                            {
-                                String name = userSnapshot.getKey();
-                                if (name == searchedRecipe)
-                                {
-                                    // sending an intent that will display recipe and options
-                                    // of what to do with the recipe
-                                    Intent intentDisplay = new Intent(handleSearch.this, displayRecipe.class);
-                                    startActivity(intentDisplay);
-                                    // using finish in order to make sure that the toast message after
-                                    // the for loop won't run
-                                    finish();
-                                }
-                            }
-                            Toast.makeText(handleSearch.this, "failed to find recipe that matches with the give name", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error)
-                        {
-                            Toast.makeText(handleSearch.this, "failed to get any recipes", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    // sending an intent that will display recipe and options
+                    // of what to do with the recipe
+                    Intent intentDisplay = new Intent(handleSearch.this, displayRecipe.class);
+                    intentDisplay.putExtra("STRING_KEY", searchedRecipe);
+                    startActivity(intentDisplay);
+                }
+                else
+                {
+                    Toast.makeText(handleSearch.this, "please don't enter an empty name", Toast.LENGTH_SHORT).show();
                 }
 
             }
-        }
+        });
     }
 }
