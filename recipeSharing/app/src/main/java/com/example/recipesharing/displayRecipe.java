@@ -5,7 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
@@ -102,7 +107,6 @@ public class displayRecipe extends AppCompatActivity
                 }
                 Toast.makeText(displayRecipe.this, "failed to find recipe that matches with the give name", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(displayRecipe.this, "failed to get any recipes", Toast.LENGTH_SHORT).show();
@@ -119,6 +123,26 @@ public class displayRecipe extends AppCompatActivity
                 // using push in order to not delete an existing child if it already does exist
                 DatabaseReference newChild = userRef.push();
                 newChild.setValue(name);
+
+                // using JobScheduler and not AlarmManager + Notification because the remainder should
+                // be useful the for user even if he/her already left the app, and also in case
+                // the user would want to know his liked recipes
+                JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                ComponentName componentName = new ComponentName(displayRecipe.this, updateDatabase.class);
+                // Create a bundle to pass data to the job
+                PersistableBundle extras = new PersistableBundle();
+                extras.putString("messageToAdd", "Your message goes here");
+
+                JobInfo jobInfo = new JobInfo.Builder(1, componentName)
+                        .setMinimumLatency(2 * 60 * 1000)  // 2 minutes in milliseconds
+                        .setExtras(extras)  // Pass the message as an extra
+                        .build();
+
+                int resultCode = jobScheduler.schedule(jobInfo);
+                if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                    Toast.makeText(displayRecipe.this, "Job was successful", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
