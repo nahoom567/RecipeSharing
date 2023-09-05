@@ -18,6 +18,14 @@
         android:text="name"
         />
 
+    <Button
+        android:id="@+id/like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Like and Notify in 2 minutes"
+        android:textSize="20dp"
+        />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

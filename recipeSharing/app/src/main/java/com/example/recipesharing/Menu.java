@@ -10,7 +10,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import android.content.Intent;
 
 public class Menu extends AppCompatActivity {
-    TextInputEditText editTextSearch;
     Button buttonSearch;
     Button buttonRecipe;
     Button buttonMessages;
@@ -30,16 +29,6 @@ public class Menu extends AppCompatActivity {
             {
                 Intent intentSearch = new Intent(Menu.this, handleSearch.class);
                 startActivity(intentSearch);
-                String searchResult = editTextSearch.getText().toString();
-
-                if (TextUtils.isEmpty(searchResult))
-                {
-                    Toast.makeText(Menu.this, "Enter what you want to search", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // get the list of results
-
             }
         });
 
