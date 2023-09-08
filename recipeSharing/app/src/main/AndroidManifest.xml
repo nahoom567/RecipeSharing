@@ -18,9 +18,8 @@
         <service
             android:name=".updateDatabase"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <activity
-            android:name=".handleDisplay"
-            android:exported="false" />
+        <activity android:name=".handleAddRecipes"
+            android:exported="false"/>
         <activity
             android:name=".displayRecipe"
             android:exported="false" />

@@ -1,7 +1,9 @@
 package com.example.recipesharing;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ public class handleAddRecipes extends AppCompatActivity
     EditText editInstructions;
     EditText editIngredient;
     Button ingredientsButton;
+    Button exitButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -41,6 +44,7 @@ public class handleAddRecipes extends AppCompatActivity
         editIngredient = findViewById(R.id.editIngredients);
         ingredientsButton = findViewById(R.id.ingredientsButton);
         mAuth = FirebaseAuth.getInstance();
+        exitButton = findViewById(R.id.exit);
 
         FirebaseUser user = mAuth.getCurrentUser();
         String idUser = user.getUid();
@@ -54,7 +58,7 @@ public class handleAddRecipes extends AppCompatActivity
                 for (DataSnapshot msgSnapshot : snapshot.getChildren())
                 {
                     // finding the messages that are for this user
-                    String userId = msgSnapshot.getValue(String.class);
+                    String userId = msgSnapshot.getKey();
                     if (userId.equals(idUser))
                     {
                         nameUser[0] = msgSnapshot.child("name").getValue(String.class);
@@ -65,7 +69,18 @@ public class handleAddRecipes extends AppCompatActivity
             @Override
             public void onCancelled(@NonNull DatabaseError error)
             {
+                Log.e("handleAddRecipes", "got to on canceled");
                 Toast.makeText(handleAddRecipes.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        exitButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intentAdd = new Intent(handleAddRecipes.this, Menu.class);
+                startActivity(intentAdd);
             }
         });
 
@@ -78,14 +93,19 @@ public class handleAddRecipes extends AppCompatActivity
                 String ingredient = editIngredient.getText().toString().trim();
                 if (!TextUtils.isEmpty(ingredient))
                 {
-                    DatabaseReference ingRef = FirebaseDatabase.getInstance().getReference().child("recipes").child(editNameRecipe.toString()).child("ingredients");
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("recipes").child(editNameRecipe.toString()).child("username");
+                    DatabaseReference recRef = FirebaseDatabase.getInstance().getReference().child("recipes");
+                    DatabaseReference ingRef = recRef.child(editNameRecipe.getText().toString()).child("ingredients");
+                    DatabaseReference userRef = recRef.child(editNameRecipe.getText().toString()).child("username");
                     userRef.setValue(nameUser[0]);
-                    FirebaseDatabase.getInstance().getReference().child("recipes").child(editNameRecipe.toString()).child("instructions").setValue(editInstructions.toString());
+                    FirebaseDatabase.getInstance().getReference().child("recipes").child(editNameRecipe.getText().toString()).child("instructions").setValue(editInstructions.getText().toString());
                     // generating a unique key for the task
                     String taskId = ingRef.push().getKey();
                     ingRef.child(taskId).setValue(ingredient);
                     editIngredient.setText(""); // clearing the EditText
+
+
+
+                    // ask the user when he wants to exit entering ingredients
                 }
             }
         });

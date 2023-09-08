@@ -9,6 +9,7 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.ContactsContract;
@@ -35,18 +36,22 @@ public class displayRecipe extends AppCompatActivity
     TextView instructions;
     RecyclerView ingRecycler;
     Button likeBtn;
+    Button exitBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_recipe);
+
         nameRecipe = findViewById(R.id.nameRecipe);
         instructions = findViewById(R.id.instructionsRecipe);
         ingRecycler = findViewById(R.id.ingredientsRecycler);
         likeBtn = findViewById(R.id.like);
+        exitBtn = findViewById(R.id.exit);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            Toast.makeText(this, "did not deliver recipe name", Toast.LENGTH_SHORT).show();
+        if (extras == null)
+        {
+            Toast.makeText(this, "did not deliver anything", Toast.LENGTH_SHORT).show();
             finish();
         }
         String name = extras.getString("STRING_KEY");
@@ -59,20 +64,32 @@ public class displayRecipe extends AppCompatActivity
         recRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // in order to check if the recipe was found
+                boolean foundRecipe = false;
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+
                     String currName = userSnapshot.getKey();
                     if (currName.equals(name)) {
+                        foundRecipe = true;
                         nameRecipe.setText(name);
                         // getting the ingredients and the instructions
                         DatabaseReference nameRef = recRef.child(currName);
-                        DatabaseReference instRef = nameRef.child("instructions");
                         DatabaseReference ingrRef = nameRef.child("ingredients");
-                        instRef.addValueEventListener(new ValueEventListener() {
+                        nameRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Toast.makeText(displayRecipe.this, "trying to change instructions", Toast.LENGTH_SHORT).show();
                                 for (DataSnapshot item : snapshot.getChildren()) {
-                                    String insString = item.getValue(String.class);
-                                    instructions.setText(insString);
+                                    if (item.getKey().equals("instructions"))
+                                    {
+                                        String insString = item.getValue(String.class);
+
+                                        if (!insString.isEmpty() && insString != null)
+                                        {
+                                            Toast.makeText(displayRecipe.this, "the string it got is: " + insString, Toast.LENGTH_SHORT).show();
+                                            instructions.setText(insString);
+                                        }
+                                    }
                                 }
                             }
 
@@ -99,13 +116,14 @@ public class displayRecipe extends AppCompatActivity
                                 Toast.makeText(displayRecipe.this, "failed to get the ingredients", Toast.LENGTH_SHORT).show();
                             }
                         });
-
                         // using finish in order to make sure that the toast message after
                         // the for loop won't run
-                        finish();
                     }
                 }
-                Toast.makeText(displayRecipe.this, "failed to find recipe that matches with the give name", Toast.LENGTH_SHORT).show();
+                if (!foundRecipe)
+                {
+                    Toast.makeText(displayRecipe.this, "failed to find recipe that matches with the given name", Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -143,6 +161,14 @@ public class displayRecipe extends AppCompatActivity
                     Toast.makeText(displayRecipe.this, "Job was successful", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        exitBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intentDisplay = new Intent(displayRecipe.this, Menu.class);
+                startActivity(intentDisplay);
             }
         });
     }

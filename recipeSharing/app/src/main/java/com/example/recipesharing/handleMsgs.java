@@ -1,6 +1,9 @@
 package com.example.recipesharing;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,12 +29,13 @@ import java.util.List;
 public class handleMsgs extends AppCompatActivity
 {
     RecyclerView recyclerView;
+    Button btnExit;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_msgs);
-
+        btnExit = findViewById(R.id.exit);
         recyclerView = findViewById(R.id.recyclerView);
         // getting the messages and then displaying them to the user
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -65,6 +69,16 @@ public class handleMsgs extends AppCompatActivity
             public void onCancelled(@NonNull DatabaseError error)
             {
                 Toast.makeText(handleMsgs.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intentMsg = new Intent(handleMsgs.this, Menu.class);
+                startActivity(intentMsg);
             }
         });
     }

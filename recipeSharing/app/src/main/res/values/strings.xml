@@ -12,6 +12,6 @@
     <string name="search">search</string>
     <string name="addRecipe">Add Recipe</string>
     <string name="messages">Messages</string>
-    <string name="explanation_to_user">please enter one ingredient at a time, and press the add ingredient button for every one ingredient</string>
+    <string name="explanation_to_user">please enter one ingredient at a time, and press the add ingredient button for every one ingredient, the fields cannot contain: ".", "#", "$", "[", or "]"</string>
     <string name="search_recipes">search recipes</string>
 </resources>
