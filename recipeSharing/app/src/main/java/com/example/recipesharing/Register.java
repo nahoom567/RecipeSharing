@@ -1,5 +1,7 @@
 package com.example.recipesharing;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -100,21 +103,24 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 // the following is a standard code that is used for authenticating with Firebase
                 // using password-based accounts on Android provided by the Firebase website:
                 // https://firebase.google.com/docs/auth/android/password-auth?hl=he#java_3
                 // I changed it up so it will use toast instead of log
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+
+                // I use runOnUiThread because addOnCompleteListener runs asynchronously on a background thread.
+                // This means that the code inside the onComplete method, including the toast messages,
+                // will execute on a thread other than the main UI thread.
+                // note: using toast messages there might sometimes work because of how Firebase
+                // manages the thread context for different parts of its authentication and database
+                // operations, the SDK might already ensure that some of them will appear on the main UI thread
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                    public void onComplete(@NonNull Task<AuthResult> task)
+                                    {
                                         progressBar.setVisibility(View.GONE);
                                         if (task.isSuccessful())
                                         {
-                                            Toast.makeText(Register.this, "Account created.",
-                                                    Toast.LENGTH_SHORT).show();
-                                            // saving username during registration
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             if (user != null)
                                             {
@@ -123,39 +129,28 @@ public class Register extends AppCompatActivity {
                                                 DatabaseReference dbRef = mDatabase.getReference();
                                                 DatabaseReference usersRef = dbRef.child("users"); // Reference to "users" node
                                                 DatabaseReference userRef = usersRef.child(userId); // Reference to the user's data
+                                                // Update the user's name in the database
                                                 userRef.child("name").setValue(username); // Set the user's name
-                                                Toast.makeText(Register.this, "Added user.",
-                                                        Toast.LENGTH_LONG).show();
-                                                // checking if users has already been created
-                                                /*
-                                                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                // Display a toast on the main UI thread
+                                                runOnUiThread(new Runnable()
+                                                {
                                                     @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        if (!snapshot.exists())
-                                                        {
-                                                            // The "users" node does not exist
-                                                            usersRef.setValue("users");
-                                                            String userId = user.getUid();
-                                                            usersRef.child(userId).child("name").setValue(username);
-                                                            Toast.makeText(Register.this, "Added user.",
-                                                                    Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                        Toast.makeText(Register.this, "Authentication failed during users process",
-                                                                Toast.LENGTH_LONG).show();
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, "the operation was successful", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-                                                 */
-                                                // adding "users" node (doesn't matter if it already exists)
                                             }
                                             else
                                             {
-                                                // If sign in fails, display a message to the user.
-                                                Toast.makeText(Register.this, "Authentication failed at the start",
-                                                        Toast.LENGTH_LONG).show();
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, "User is null", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         }
                                         else
@@ -164,24 +159,49 @@ public class Register extends AppCompatActivity {
                                             if (exception instanceof FirebaseAuthWeakPasswordException)
                                             {
                                                 // This exception is thrown when the password is too weak
-                                                Toast.makeText(Register.this, "Password must be at least 6 characters.",
-                                                        Toast.LENGTH_SHORT).show();
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, "Password must be at least 6 characters.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                             else if (exception instanceof FirebaseAuthInvalidCredentialsException)
                                             {
                                                 // This exception is thrown when the email address is invalid
-                                                Toast.makeText(Register.this, "Invalid email address format.",
-                                                        Toast.LENGTH_SHORT).show();
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, "Invalid email address format..", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                             else if (exception instanceof FirebaseAuthUserCollisionException)
                                             {
                                                 // This exception is thrown when the email address is already in use
-                                                Toast.makeText(Register.this, "Email address is already in use.",
-                                                        Toast.LENGTH_SHORT).show();
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, "Email address is already in use.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                             else
                                             {
-                                                Toast.makeText(Register.this, exception.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(Register.this, exception.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         }
                                     }

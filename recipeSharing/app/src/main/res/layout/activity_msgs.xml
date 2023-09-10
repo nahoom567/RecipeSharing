@@ -9,6 +9,17 @@
     android:padding="15dp"
     tools:context=".handleMsgs">
 
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit to Menu"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        />
+
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="306dp"
