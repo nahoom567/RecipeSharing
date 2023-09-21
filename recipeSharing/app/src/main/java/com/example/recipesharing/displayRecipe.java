@@ -149,7 +149,7 @@ public class displayRecipe extends AppCompatActivity
                 ComponentName componentName = new ComponentName(displayRecipe.this, updateDatabase.class);
                 // Create a bundle to pass data to the job
                 PersistableBundle extras = new PersistableBundle();
-                extras.putString("messageToAdd", "Your message goes here");
+                extras.putString("messageToAdd", "You have notified the recipe: " + nameRecipe.getText().toString());
 
                 JobInfo jobInfo = new JobInfo.Builder(1, componentName)
                         .setMinimumLatency(2 * 60 * 1000)  // 2 minutes in milliseconds
