@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="15dp"
+    tools:context=".Register">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="@string/register"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Requirements:\nThe provided email must be in a valid email format for example user@example.com\nPasswords needs to have a minimum length of 6 characters\nYou can't have two user accounts with the same email address"
+        android:textSize="20sp"
+        android:textStyle="normal" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:hint="@string/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email"
+            android:hint="@string/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:hint="@string/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--the progress bar is set to visible once the button is clicked-->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/btn_register"
+        android:text="@string/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!--in order to login through the registration activity-->
+    <TextView
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:id="@+id/loginNow"
+        android:text="@string/click_to_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

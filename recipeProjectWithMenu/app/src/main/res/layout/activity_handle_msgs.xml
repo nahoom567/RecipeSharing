@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="15dp"
+    tools:context=".HandleMessages">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit to Menu"
+        android:textSize="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="306dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="30dp"
+        android:text="the messages:"
+        android:textSize="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

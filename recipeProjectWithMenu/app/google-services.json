@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "44441227134",
+    "firebase_url": "https://recipeprojectflamingo-default-rtdb.firebaseio.com",
+    "project_id": "recipeprojectflamingo",
+    "storage_bucket": "recipeprojectflamingo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44441227134:android:680394452fe67816abed2f",
+        "android_client_info": {
+          "package_name": "com.example.recipeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwShHNOmee9CJ8yNI8JOJZb6EkSnOzxy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

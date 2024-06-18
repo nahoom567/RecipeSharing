@@ -1,0 +1,188 @@
+@startuml
+class com.example.recipeproject.Item {
+- String text
++ <<Create>> Item(String)
++ String getText()
+}
+
+
+class com.example.recipeproject.SearchCorrector {
+- List<String> database
+- {static} double SIMILARITY_THRESHOLD
++ <<Create>> SearchCorrector()
++ String correctSearchQuery(String)
++ void addWordToDatabase(String)
+}
+
+
+class com.example.recipeproject.UpdateDatabase {
++ boolean onStartJob(JobParameters)
++ boolean onStopJob(JobParameters)
+}
+
+class com.example.recipeproject.AddRecipes {
+~ FirebaseAuth mAuth
+~ EditText editNameRecipe
+~ EditText editInstructions
+~ EditText editIngredient
+~ Button ingredientsButton
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.MenuActivity {
+# Toolbar toolbar
+# void onCreate(Bundle)
++ boolean onCreateOptionsMenu(Menu)
++ boolean onOptionsItemSelected(MenuItem)
+}
+
+
+class com.example.recipeproject.CustomAdapter {
+- List<Item> itemList
++ <<Create>> CustomAdapter(List<Item>)
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
+}
+
+
+class com.example.recipeproject.CustomAdapter$ViewHolder {
+~ TextView textView
++ <<Create>> ViewHolder(View)
+}
+
+
+class com.example.recipeproject.Menu {
+~ Button buttonSearch
+~ Button buttonRecipe
+~ Button buttonMessages
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.Login {
+~ TextInputEditText editTextEmail
+~ TextInputEditText editTextPassword
+~ Button buttonLogin
+~ FirebaseAuth mAuth
+~ ProgressBar progressBar
+~ TextView textView
++ void onStart()
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.StartProject {
+~ FirebaseAuth auth
+~ Button button
+~ TextView textView
+~ FirebaseUser user
+~ FirebaseDatabase db
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.TransitionUtility {
++ {static} void startActivityWithTransition(Activity,Intent)
+}
+
+class com.example.recipeproject.DisplayRecipe {
+~ FirebaseAuth mAuth
+~ TextView nameRecipe
+~ TextView instructions
+~ RecyclerView ingRecycler
+~ Button likeBtn
+~ Button exitBtn
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.Messages {
+~ String userId
+~ String nameUser
+~ List<String> messages
++ <<Create>> Messages(String,List<String>,String)
++ String getUserId()
++ String getNameUser()
++ void setNameUser(String)
++ List<String> getMessages()
++ void setMessages(List<String>)
+}
+
+
+class com.example.recipeproject.HandleMessages {
+~ RecyclerView recyclerView
+~ Button btnExit
+~ FirebaseAuth mAuth
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.TransitionClass {
+- SurfaceHolder surfaceHolder
+~ AnimationThread animationThread
++ {static} long ANIMATION_DURATION
+- Handler uiHandler
++ <<Create>> TransitionClass(Context)
++ <<Create>> TransitionClass(Context,AttributeSet)
+- void init()
++ void surfaceCreated(SurfaceHolder)
++ void surfaceChanged(SurfaceHolder,int,int,int)
++ void surfaceDestroyed(SurfaceHolder)
+- void drawAnimation(Canvas)
+}
+
+
+class com.example.recipeproject.TransitionClass$AnimationThread {
+- boolean isRunning
+- long startTime
+- Runnable onAnimationEndListener
++ <<Create>> AnimationThread(long)
++ void setOnAnimationEndListener(Runnable)
++ long getStartTime()
++ void setRunning(boolean)
++ void run()
+}
+
+
+class com.example.recipeproject.Register {
+~ TextInputEditText editTextUser
+~ TextInputEditText editTextEmail
+~ TextInputEditText editTextPassword
+~ Button buttonReg
+~ FirebaseAuth mAuth
+~ ProgressBar progressBar
+~ TextView textView
++ void onStart()
+# void onCreate(Bundle)
+}
+
+
+class com.example.recipeproject.Search {
+~ Button btSearch
+~ EditText editSearch
+# void onCreate(Bundle)
+}
+
+
+
+
+android.app.job.JobService <|-- com.example.recipeproject.UpdateDatabase
+com.example.recipeproject.MenuActivity <|-- com.example.recipeproject.AddRecipes
+androidx.appcompat.app.AppCompatActivity <|-- com.example.recipeproject.MenuActivity
+com.example.recipeproject.Adapter <|-- com.example.recipeproject.CustomAdapter
+com.example.recipeproject.CustomAdapter +.. com.example.recipeproject.CustomAdapter$ViewHolder
+com.example.recipeproject.ViewHolder <|-- com.example.recipeproject.CustomAdapter$ViewHolder
+androidx.appcompat.app.AppCompatActivity <|-- com.example.recipeproject.Menu
+androidx.appcompat.app.AppCompatActivity <|-- com.example.recipeproject.Login
+androidx.appcompat.app.AppCompatActivity <|-- com.example.recipeproject.StartProject
+com.example.recipeproject.MenuActivity <|-- com.example.recipeproject.DisplayRecipe
+com.example.recipeproject.MenuActivity <|-- com.example.recipeproject.HandleMessages
+com.example.recipeproject.Callback <|.. com.example.recipeproject.TransitionClass
+android.view.SurfaceView <|-- com.example.recipeproject.TransitionClass
+com.example.recipeproject.TransitionClass +.. com.example.recipeproject.TransitionClass$AnimationThread
+com.example.recipeproject.Thread <|-- com.example.recipeproject.TransitionClass$AnimationThread
+androidx.appcompat.app.AppCompatActivity <|-- com.example.recipeproject.Register
+com.example.recipeproject.MenuActivity <|-- com.example.recipeproject.Search
+@enduml
